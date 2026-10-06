@@ -1,0 +1,28 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "mule-xml-debugger",
+        "request": "launch",
+        "name": "Run Mule Application",
+        "noDebug": true,
+        "mule.projects": ["${workspaceFolder}"],
+        "mule.runtime.args": "-M-Dmule.forceConsoleLog -M-Dmule.testingMode -M-XX:-UseBiasedLocking -M-Dfile.encoding=UTF-8 -M-XX:+UseG1GC -M-XX:+UseStringDeduplication -M-Dcom.ning.http.client.AsyncHttpClientConfig.useProxyProperties=true -M-Dmule.debugger.test.port=8000 -M-Dencryption.key=${input:encryptionKey} console0"
+      },
+      {
+        "type": "mule-xml-debugger",
+        "request": "launch",
+        "name": "Debug Mule Application",
+        "mule.projects": ["${workspaceFolder}"],
+        "mule.runtime.args": "-M-Dmule.forceConsoleLog -M-Dmule.testingMode -M-XX:-UseBiasedLocking -M-Dfile.encoding=UTF-8 -M-XX:+UseG1GC -M-XX:+UseStringDeduplication -M-Dcom.ning.http.client.AsyncHttpClientConfig.useProxyProperties=true -M-Dmule.debugger.test.port=8000 -M-Dencryption.key=${input:encryptionKey} console0"
+      }
+    ],
+    "inputs": [
+      {
+        "id": "encryptionKey",
+        "type": "promptString",
+        "description": "Secure properties encryption key (contents of .encryption.key)",
+        "password": true
+      }
+    ]
+  }

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+      xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+      xmlns:compression="http://www.mulesoft.org/schema/mule/compression"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+        http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+        http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+        http://www.mulesoft.org/schema/mule/compression http://www.mulesoft.org/schema/mule/compression/current/mule-compression.xsd">
+
+    <configuration-properties doc:name="Config" file="config.yaml"/>
+
+    <!-- Encrypted values (AES/CBC). Key is supplied at runtime: -M-Dencryption.key=... -->
+    <secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config"
+                              file="secure-config.yaml" key="${encryption.key}">
+        <secure-properties:encrypt algorithm="AES" mode="CBC"/>
+    </secure-properties:config>
+
+    <http:listener-config name="Listener_Config" doc:name="HTTP Listener config">
+        <http:listener-connection host="0.0.0.0" port="${http.port}"/>
+    </http:listener-config>
+
+    <http:request-config name="Anypoint_Request_Config" doc:name="Anypoint Platform" responseTimeout="60000">
+        <http:request-connection protocol="HTTPS" host="${anypoint.host}" port="443"/>
+    </http:request-config>
+
+    <!-- GET http://localhost:8089/api-catalog           -> JSON (API -> endpoints -> fields)
+         GET http://localhost:8089/api-catalog?format=csv -> one row per API / endpoint / field -->
+    <flow name="get-api-catalog-flow">
+        <http:listener doc:name="GET /api-catalog" config-ref="Listener_Config" path="/api-catalog" allowedMethods="GET"/>
+        <set-variable doc:name="format" variableName="format" value="#[lower(attributes.queryParams.format default 'json')]"/>
+
+        <flow-ref doc:name="Get access token" name="get-access-token"/>
+        <flow-ref doc:name="Search REST API assets" name="search-rest-api-assets"/>
+
+        <logger doc:name="Assets found" level="INFO" message="#['Found ' ++ sizeOf(vars.assets) ++ ' REST API assets']"/>
+
+        <parallel-foreach doc:name="For each API" collection="#[vars.assets]" maxConcurrency="${exchange.maxConcurrency}">
+            <flow-ref doc:name="Get endpoints of API" name="get-api-endpoints"/>
+        </parallel-foreach>
+
+        <choice doc:name="Output format">
+            <when expression="#[vars.format == 'csv']">
+                <ee:transform doc:name="Catalog to CSV">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+import toRows from modules::toRows
+output application/csv
+---
+toRows(payload map $.payload)]]></ee:set-payload>
+                    </ee:message>
+                </ee:transform>
+            </when>
+            <otherwise>
+                <ee:transform doc:name="Catalog to JSON">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+var apis = payload map $.payload
+---
+{
+    totalApis: sizeOf(apis),
+    failed: sizeOf(apis filter ($.error != null)),
+    apis: apis orderBy lower($.name default "")
+}]]></ee:set-payload>
+                    </ee:message>
+                </ee:transform>
+            </otherwise>
+        </choice>
+    </flow>
+
+    <!-- Connected App (client credentials). Needs the "Exchange Viewer" scope on the business group(s). -->
+    <sub-flow name="get-access-token">
+        <ee:transform doc:name="Token request">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+    grant_type: "client_credentials",
+    client_id: Mule::p("anypoint.clientId"),
+    client_secret: Mule::p("secure::anypoint.clientSecret")
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <http:request doc:name="POST /accounts/api/v2/oauth2/token" method="POST" config-ref="Anypoint_Request_Config"
+                      path="/accounts/api/v2/oauth2/token" target="token" targetValue="#[payload.access_token]"/>
+    </sub-flow>
+
+    <!-- Pages through Exchange search until a short page comes back -->
+    <sub-flow name="search-rest-api-assets">
+        <!-- FIX 1: Explicitly define the output type for the initial empty array -->
+        <set-variable doc:name="assets = []" variableName="assets" value="#[output application/java --- []]"/>
+        <set-variable doc:name="searchDone = false" variableName="searchDone" value="#[false]"/>
+        <set-variable doc:name="pageSize" variableName="pageSize" value="#[Mule::p('exchange.search.pageSize') as Number]"/>
+
+        <foreach doc:name="For each page" collection="#[0 to ((Mule::p('exchange.search.maxPages') as Number) - 1)]">
+            <choice doc:name="More pages?">
+                <when expression="#[not vars.searchDone]">
+                    <http:request doc:name="GET /exchange/api/v2/assets/search" method="GET" config-ref="Anypoint_Request_Config"
+                                  path="/exchange/api/v2/assets/search">
+                        <http:headers><![CDATA[#[{ Authorization: "Bearer " ++ vars.token }]]]></http:headers>
+                        <http:query-params><![CDATA[#[{
+                            organizationId: Mule::p('anypoint.organizationId'),
+                            types: "rest-api",
+                            limit: vars.pageSize,
+                            offset: payload * vars.pageSize
+                        }]]]></http:query-params>
+                    </http:request>
+                    <set-variable doc:name="page" variableName="page"
+                                  value="#[output application/java --- if (payload is Array) payload else (payload.assets default [])]"/>
+                    
+                    <!-- FIX 2: Explicitly define the output type for the concatenated array -->
+                    <set-variable doc:name="append page" variableName="assets"
+                                  value="#[output application/java --- (vars.assets ++ vars.page) distinctBy ($.groupId ++ ':' ++ $.assetId)]"/>
+                    
+                    <set-variable doc:name="searchDone?" variableName="searchDone" value="#[sizeOf(vars.page) &lt; vars.pageSize]"/>
+                </when>
+            </choice>
+        </foreach>
+    </sub-flow>
+
+    <!-- Called once per asset: downloads its AMF model and converts it to endpoints + fields -->
+    <flow name="get-api-endpoints">
+        <set-variable doc:name="asset" variableName="asset"
+                      value="#[output application/java --- payload filterObject ((v, k) -> ['name','groupId','assetId','version','organizationId'] contains (k as String))]"/>
+        <try doc:name="Try">
+             <http:request doc:name="GET AMF model" method="GET" config-ref="Anypoint_Request_Config"
+                          path="#[Mule::p('exchange.amfPathTemplate')
+                                    replace '{organizationId}' with (vars.asset.organizationId default Mule::p('anypoint.organizationId'))
+                                    replace '{groupId}' with vars.asset.groupId
+                                    replace '{assetId}' with vars.asset.assetId
+                                    replace '{version}' with vars.asset.version]">
+                <http:headers><![CDATA[#[{ 
+                    Authorization: "Bearer " ++ vars.token,
+                    'Accept-Encoding': 'identity' 
+                }]]]></http:headers>
+            </http:request>
+            <!-- Exchange stores the AMF model gzipped, so Accept-Encoding: identity does not help.
+                 Gunzip it; if the body is not gzip, keep it as is (the payload stream is repeatable). -->
+            <try doc:name="Gunzip if compressed">
+                <compression:decompress doc:name="Gunzip AMF model">
+                    <compression:decompressor>
+                        <compression:gzip-decompressor/>
+                    </compression:decompressor>
+                </compression:decompress>
+                <error-handler>
+                    <on-error-continue doc:name="Not gzip: keep body" logException="false">
+                        <logger doc:name="Not gzipped" level="DEBUG" message="#['AMF model for ' ++ vars.asset.assetId ++ ' is not gzipped']"/>
+                    </on-error-continue>
+                </error-handler>
+            </try>
+            <ee:transform doc:name="AMF to endpoints">
+                <ee:message>
+                    <ee:set-payload><![CDATA[%dw 2.0
+import endpointsFromAmf from modules::amfEndpoints
+output application/java
+// Gunzipped bodies arrive as Binary; a plain JSON body is already parsed
+var amf = if (payload is Binary or payload is String) read(payload, "application/json") else payload
+var api = endpointsFromAmf(amf)
+---
+vars.asset ++ {
+    specVersion: api.apiVersion,
+    operationCount: sizeOf(api.endpoints),
+    endpoints: api.endpoints
+}]]></ee:set-payload>
+                </ee:message>
+            </ee:transform>
+            <error-handler>
+                <on-error-continue doc:name="Keep going on failure" enableNotifications="true" logException="true">
+                    <set-payload doc:name="Error entry"
+                                 value="#[vars.asset ++ { endpoints: [], error: error.description }]"/>
+                </on-error-continue>
+            </error-handler>
+        </try>
+    </flow>
+</mule>

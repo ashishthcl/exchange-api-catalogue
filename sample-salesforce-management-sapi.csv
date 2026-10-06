@@ -1,0 +1,224 @@
+apiName,assetId,assetVersion,method,path,summary,location,field,type,required
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/payment,,request,status,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/payment,,request,Id,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/payment,,request,transactionReference,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/payment,,request,pspReference,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/payment,,request,name,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/shippingOrder,Send data from MuleSoft to Salesforce,request,TTOrderId,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/shippingOrder,Send data from MuleSoft to Salesforce,request,IngramOrderId,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/shippingOrder,Send data from MuleSoft to Salesforce,request,statusCode,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/shippingOrder,Send data from MuleSoft to Salesforce,request,trackingNumber,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/shippingOrder,Send data from MuleSoft to Salesforce,request,courierId,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/shippingOrder,Send data from MuleSoft to Salesforce,request,deliveredDateTime,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/shippingOrder,Send data from MuleSoft to Salesforce,request,items,array<object>,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/shippingOrder,Send data from MuleSoft to Salesforce,request,items[].lineId,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/shippingOrder,Send data from MuleSoft to Salesforce,request,items[].TTlineReference,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/shippingOrder,Send data from MuleSoft to Salesforce,request,items[].serialNumber,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/shippingOrder,Send data from MuleSoft to Salesforce,request,items[].MACAddress,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/productOrder/openOrderIds,Get a list of open order ids in Salesforce,response:200,[].subOrderId,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/productOrder/openOrderIds,Get a list of open order ids in Salesforce,response:200,[].pxcOrderId,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/productOrder/openOrderIds,Get a list of open order ids in Salesforce,response:200,[].lastOrderUpdateProcessedDate,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,param:path,id,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder,any,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.@type,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.href,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.id,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.state,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.cancellationDate,dateTime,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.cancellationReason,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.category,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.description,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.expectedCompletionDate,dateTime,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem,array<object>,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].@type,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].@baseType,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].@schemaLocation,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].quantity,integer,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].action,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].state,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].appointment,object,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].appointment.@type,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].appointment.@baseType,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].appointment.@schemaLocation,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].appointment.@type,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].appointment.href,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].appointment.id,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].appointment.id,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].appointment.href,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].appointment.name,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].appointment.@referredType,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].appointment.description,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemPrice,array<object>,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemPrice[].@type,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemPrice[].@baseType,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemPrice[].@schemaLocation,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemPrice[].description,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemPrice[].name,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemPrice[].productOfferingPrice,any,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemPrice[].recurringChargePeriod,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemPrice[].unitOfMeasure,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemPrice[].priceAlteration,array<object>,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemPrice[].price,object,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemPrice[].priceType,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemTerm,array<object>,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemTerm[].@type,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemTerm[].@baseType,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemTerm[].@schemaLocation,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemTerm[].description,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemTerm[].duration,object,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemTerm[].name,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemTotalPrice,array<object>,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemTotalPrice[].@type,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemTotalPrice[].@baseType,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemTotalPrice[].@schemaLocation,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemTotalPrice[].description,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemTotalPrice[].name,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemTotalPrice[].productOfferingPrice,any,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemTotalPrice[].recurringChargePeriod,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemTotalPrice[].unitOfMeasure,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemTotalPrice[].priceAlteration,array<object>,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemTotalPrice[].price,object,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].itemTotalPrice[].priceType,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].note,array<object>,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].note[].@type,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].note[].@baseType,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].note[].@schemaLocation,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].note[].id,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].note[].author,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].note[].date,dateTime,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].note[].text,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].payment,array<object>,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].payment[].@type,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].payment[].@baseType,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].payment[].@schemaLocation,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].product,object | object,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].product.creationDate,dateTime,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].product.@type,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].productOrderItem,array<object(ProductOrderItem)>,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.productOrderItem[].id,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.creationDate,dateTime,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,request,productOrder.completionDate,dateTime,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,response:200,stateChangeNotificationOutput,object,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,response:200,stateChangeNotificationOutput.response,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/productOrder/{id}/state,Update a Product Order State in Salesforce,response:200,stateChangeNotificationOutput.statusCode,integer,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/checkoutPayment,Send data from MuleSoft to Salesforce,request,status,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/checkoutPayment,Send data from MuleSoft to Salesforce,request,externalReference,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/checkoutPayment,Send data from MuleSoft to Salesforce,request,externalStatus,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/checkoutPayment,Send data from MuleSoft to Salesforce,request,id,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/checkoutPayment,Send data from MuleSoft to Salesforce,request,amount,object,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/checkoutPayment,Send data from MuleSoft to Salesforce,request,amount.value,number,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/checkoutPayment,Send data from MuleSoft to Salesforce,request,amount.unit,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/checkoutPayment,Send data from MuleSoft to Salesforce,request,billingAccount,object,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/checkoutPayment,Send data from MuleSoft to Salesforce,request,billingAccount.id,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/checkoutPayment,Send data from MuleSoft to Salesforce,request,timeOccurred,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/dunningCaseCreateEvent,Send Aria event data from MuleSoft to Salesforce.,request,clientAccountId,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/dunningCaseCreateEvent,Send Aria event data from MuleSoft to Salesforce.,request,dunningStep,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/dunningCaseCreateEvent,Send Aria event data from MuleSoft to Salesforce.,request,dunningDescription,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/dunningCaseCreateEvent,Send Aria event data from MuleSoft to Salesforce.,request,eventId,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/dunningCaseCreateEvent,Send Aria event data from MuleSoft to Salesforce.,request,reasonL1,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/dunningCaseCreateEvent,Send Aria event data from MuleSoft to Salesforce.,request,reasonL2,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/dunningCaseCreateEvent,Send Aria event data from MuleSoft to Salesforce.,request,reasonL3,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/account/paymentMethod,Update account and Create payment method,request,accountNumber,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/account/paymentMethod,Update account and Create payment method,request,billingAccountNumber,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/account/paymentMethod,Update account and Create payment method,request,paymentMethod,object,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/account/paymentMethod,Update account and Create payment method,request,paymentMethod.methodType,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/account/paymentMethod,Update account and Create payment method,request,paymentMethod.status,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/account/paymentMethod,Update account and Create payment method,request,paymentMethod.validityStartDate,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/account/paymentMethod,Update account and Create payment method,request,paymentMethod.validityEndDate,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/account/paymentMethod,Update account and Create payment method,request,paymentMethod.accessPayContractId,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/account/paymentMethod,Update account and Create payment method,request,paymentMethod.accessPayCustomerId,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/account/paymentMethod,Update account and Create payment method,request,paymentMethod.bankAccountHolderName,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/account/paymentMethod,Update account and Create payment method,request,paymentMethod.bankAccountNumber,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/account/paymentMethod,Update account and Create payment method,request,paymentMethod.sortCode,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/account/paymentMethod,Update account and Create payment method,request,paymentMethod.directDebitReference,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/account/paymentMethod,Update account and Create payment method,response:200,success,boolean,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/account/paymentMethod,Update account and Create payment method,response:200,message,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/account/paymentMethod,Update account and payment method,request,accountNumber,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/account/paymentMethod,Update account and payment method,request,billingAccountNumber,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/account/paymentMethod,Update account and payment method,request,paymentMethod,object,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/account/paymentMethod,Update account and payment method,request,paymentMethod.methodType,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/account/paymentMethod,Update account and payment method,request,paymentMethod.status,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/account/paymentMethod,Update account and payment method,request,paymentMethod.validityStartDate,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/account/paymentMethod,Update account and payment method,request,paymentMethod.validityEndDate,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/account/paymentMethod,Update account and payment method,request,paymentMethod.accessPayContractId,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/account/paymentMethod,Update account and payment method,request,paymentMethod.accessPayCustomerId,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/account/paymentMethod,Update account and payment method,request,paymentMethod.bankAccountHolderName,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/account/paymentMethod,Update account and payment method,request,paymentMethod.bankAccountNumber,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/account/paymentMethod,Update account and payment method,request,paymentMethod.sortCode,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/account/paymentMethod,Update account and payment method,request,paymentMethod.directDebitReference,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/account/paymentMethod,Update account and payment method,response:200,success,boolean,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/account/paymentMethod,Update account and payment method,response:200,message,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/account/paymentMethod,Get filtered payment method records based on Account Number,param:query,accountNumber,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/account/paymentMethod,Get filtered payment method records based on Account Number,param:query,billingAccountNumber,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/account/paymentMethod,Get filtered payment method records based on Account Number,param:query,accessPayCustomerId,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/account/paymentMethod,Get filtered payment method records based on Account Number,param:query,status,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/account/paymentMethod,Get filtered payment method records based on Account Number,param:query,methodType,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/account/paymentMethod,Get filtered payment method records based on Account Number,response:200,account,object,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/account/paymentMethod,Get filtered payment method records based on Account Number,response:200,account.accountNumber,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/account/paymentMethod,Get filtered payment method records based on Account Number,response:200,account.billingAccountNumber,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/account/paymentMethod,Get filtered payment method records based on Account Number,response:200,account.diseIdentifier,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/account/paymentMethod,Get filtered payment method records based on Account Number,response:200,paymentMethods,array<object>,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/account/paymentMethod,Get filtered payment method records based on Account Number,response:200,paymentMethods[].id,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/account/paymentMethod,Get filtered payment method records based on Account Number,response:200,paymentMethods[].methodType,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/account/paymentMethod,Get filtered payment method records based on Account Number,response:200,paymentMethods[].status,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/account/paymentMethod,Get filtered payment method records based on Account Number,response:200,paymentMethods[].validityStartDate,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/account/paymentMethod,Get filtered payment method records based on Account Number,response:200,paymentMethods[].validityEndDate,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/account/paymentMethod,Get filtered payment method records based on Account Number,response:200,paymentMethods[].accessPayContractId,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/account/paymentMethod,Get filtered payment method records based on Account Number,response:200,paymentMethods[].accessPayCustomerId,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/account/paymentMethod,Get filtered payment method records based on Account Number,response:200,paymentMethods[].paymentCustomerIdentifier,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/paymentMethod,Update payment method by ID,request,id,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/paymentMethod,Update payment method by ID,request,methodType,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/paymentMethod,Update payment method by ID,request,status,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/paymentMethod,Update payment method by ID,request,accessPayContractId,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/paymentMethod,Update payment method by ID,request,accessPayCustomerId,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/paymentMethod,Update payment method by ID,request,validityStartDate,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/paymentMethod,Update payment method by ID,request,validityEndDate,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/paymentMethod,Update payment method by ID,response:200,success,boolean,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/paymentMethod,Update payment method by ID,response:200,message,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/paymentMethod,Get payment method by ID,param:query,id,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/paymentMethod,Get payment method by ID,param:query,accessPayCustomerId,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/paymentMethod,Get payment method by ID,param:query,status,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/paymentMethod,Get payment method by ID,param:query,methodType,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/paymentMethod,Get payment method by ID,response:200,[].id,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/paymentMethod,Get payment method by ID,response:200,[].methodType,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/paymentMethod,Get payment method by ID,response:200,[].status,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/paymentMethod,Get payment method by ID,response:200,[].validityStartDate,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/paymentMethod,Get payment method by ID,response:200,[].validityEndDate,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/paymentMethod,Get payment method by ID,response:200,[].accessPayContractId,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/paymentMethod,Get payment method by ID,response:200,[].accessPayCustomerId,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/paymentMethod,Get payment method by ID,response:200,[].paymentCustomerIdentifier,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/paymentMethod,Get payment method by ID,response:200,[].lastModifiedDate,dateTime,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/paymentMethod,Get payment method by ID,response:200,[].accountId,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,GET,/paymentMethod,Get payment method by ID,response:200,[].accountNumber,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/send-instruction,Submit a new KCI instruction,request,accountNumber,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/send-instruction,Submit a new KCI instruction,request,bankAccountNumber,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/send-instruction,Submit a new KCI instruction,request,sortCode,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/send-instruction,Submit a new KCI instruction,request,bankAccountname,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/send-instruction,Submit a new KCI instruction,request,kciType,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/send-instruction,Submit a new KCI instruction,request,accountBalance,string | double | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/send-instruction,Submit a new KCI instruction,response:200,message,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/createPaymentIssueCase,Create a Salesforce case for payment method failures or issues.,request,clientAccountId,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/createPaymentIssueCase,Create a Salesforce case for payment method failures or issues.,request,reasonL1,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/createPaymentIssueCase,Create a Salesforce case for payment method failures or issues.,request,reasonL2,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/createPaymentIssueCase,Create a Salesforce case for payment method failures or issues.,request,reasonL3,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/createPaymentIssueCase,Create a Salesforce case for payment method failures or issues.,request,status,string | null,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/createPaymentIssueCase,Create a Salesforce case for payment method failures or issues.,response:200,message,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/data/query,Execute a generic Salesforce query,request,query,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/data/query,Execute a generic Salesforce query,request,queryType,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/data/query,Execute a generic Salesforce query,response:200,totalSize,integer,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/data/query,Execute a generic Salesforce query,response:200,done,boolean,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/data/query,Execute a generic Salesforce query,response:200,records,array<object>,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/data/record,Insert a generic Salesforce record,request,objectType,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/data/record,Insert a generic Salesforce record,request,fields,object,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/data/record,Insert a generic Salesforce record,request,headers,object,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/data/record,Insert a generic Salesforce record,request,headers.AssignmentRuleHeader,object,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/data/record,Insert a generic Salesforce record,request,headers.AssignmentRuleHeader.assignmentRuleId,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/data/record,Insert a generic Salesforce record,response:201,id,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/data/record,Insert a generic Salesforce record,response:201,success,boolean,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,POST,/data/record,Insert a generic Salesforce record,response:201,errors,array<string>,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/data/record,Update a generic Salesforce record,request,objectType,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/data/record,Update a generic Salesforce record,request,id,string,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/data/record,Update a generic Salesforce record,request,fields,object,true
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/data/record,Update a generic Salesforce record,response:200,id,string,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/data/record,Update a generic Salesforce record,response:200,success,boolean,false
+salesforce-management-sapi,salesforce-management-sapi,1.0.16,PATCH,/data/record,Update a generic Salesforce record,response:200,errors,array<string>,false

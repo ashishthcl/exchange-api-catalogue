@@ -1,0 +1,4 @@
+# Encrypted with the MuleSoft Secure Properties Tool: AES / CBC.
+# Decrypted at runtime with the key passed as -Dencryption.key (never commit the key).
+anypoint:
+  clientSecret: "![lcnCJ+uyV5EHDP8S0uJuvnN/Hj6R9H5fh0ECDDd06OBBGX3+8sLEixuEc4wbH3J5]"

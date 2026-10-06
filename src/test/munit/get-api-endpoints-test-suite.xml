@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+      xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+        http://www.mulesoft.org/schema/mule/munit-tools http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+
+    <munit:config name="get-api-endpoints-test-suite.xml"/>
+
+    <!-- get-api-endpoints never reads secure:: values, so a placeholder key is enough to start the app.
+         A real -Dencryption.key system property still takes precedence over this global property. -->
+    <global-property doc:name="encryption.key (placeholder)" name="encryption.key" value="munit-placeholder-key-0123456789"/>
+
+    <!-- Input for get-api-endpoints: one Exchange search hit (extra fields must be dropped) and a bearer token -->
+    <sub-flow name="given-exchange-asset">
+        <set-variable doc:name="token" variableName="token" value="munit-token"/>
+        <set-payload doc:name="Exchange search hit" value="#[{
+            name: 'Salesforce Management SAPI',
+            groupId: 'org-1',
+            assetId: 'salesforce-management-sapi',
+            version: '1.0.16',
+            organizationId: 'org-1',
+            'type': 'rest-api',
+            status: 'published'
+        }]"/>
+    </sub-flow>
+
+    <munit:test name="get-api-endpoints-keeps-asset-coordinates-test"
+                description="Keeps only the asset coordinates and adds spec version and operation count">
+        <munit:behavior>
+            <munit-tools:mock-when doc:name="Mock GET AMF model" processor="http:request">
+                <munit-tools:with-attributes>
+                    <munit-tools:with-attribute attributeName="doc:name" whereValue="GET AMF model"/>
+                </munit-tools:with-attributes>
+                <munit-tools:then-return>
+                    <munit-tools:payload value="#[MunitTools::getResourceAsString('sample-amf.json')]" mediaType="application/json"/>
+                </munit-tools:then-return>
+            </munit-tools:mock-when>
+        </munit:behavior>
+        <munit:execution>
+            <flow-ref doc:name="given-exchange-asset" name="given-exchange-asset"/>
+            <flow-ref doc:name="get-api-endpoints" name="get-api-endpoints"/>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:verify-call doc:name="AMF model fetched once" processor="http:request" times="1">
+                <munit-tools:with-attributes>
+                    <munit-tools:with-attribute attributeName="doc:name" whereValue="GET AMF model"/>
+                </munit-tools:with-attributes>
+            </munit-tools:verify-call>
+            <munit-tools:assert-equals doc:name="Output keys" actual="#[keysOf(payload) map ($ as String)]"
+                                       expected="#[['name', 'groupId', 'assetId', 'version', 'organizationId', 'specVersion', 'operationCount', 'endpoints']]"/>
+            <munit-tools:assert-equals doc:name="name" actual="#[payload.name]" expected="#['Salesforce Management SAPI']"/>
+            <munit-tools:assert-equals doc:name="assetId" actual="#[payload.assetId]" expected="#['salesforce-management-sapi']"/>
+            <munit-tools:assert-equals doc:name="version" actual="#[payload.version]" expected="#['1.0.16']"/>
+            <munit-tools:assert-equals doc:name="specVersion" actual="#[payload.specVersion]" expected="#['v1']"/>
+            <munit-tools:assert-equals doc:name="operationCount" actual="#[payload.operationCount]" expected="#[4]"/>
+        </munit:validation>
+    </munit:test>
+
+    <munit:test name="get-api-endpoints-lists-operations-test"
+                description="One entry per operation, in spec order, with method upper-cased and summary fallback to name">
+        <munit:behavior>
+            <munit-tools:mock-when doc:name="Mock GET AMF model" processor="http:request">
+                <munit-tools:with-attributes>
+                    <munit-tools:with-attribute attributeName="doc:name" whereValue="GET AMF model"/>
+                </munit-tools:with-attributes>
+                <munit-tools:then-return>
+                    <munit-tools:payload value="#[MunitTools::getResourceAsString('sample-amf.json')]" mediaType="application/json"/>
+                </munit-tools:then-return>
+            </munit-tools:mock-when>
+        </munit:behavior>
+        <munit:execution>
+            <flow-ref doc:name="given-exchange-asset" name="given-exchange-asset"/>
+            <flow-ref doc:name="get-api-endpoints" name="get-api-endpoints"/>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:assert-equals doc:name="method + path" actual="#[payload.endpoints map ($.method ++ ' ' ++ $.path)]"
+                                       expected="#[['PATCH /payment', 'POST /shippingOrder', 'GET /productOrder/openOrderIds', 'PATCH /productOrder/{id}/state']]"/>
+            <munit-tools:assert-equals doc:name="summary" actual="#[payload.endpoints.summary]"
+                                       expected="#[['Update payment status', 'createShippingOrder', 'getOpenOrderIds', 'updateProductOrderState']]"/>
+            <munit-tools:assert-equals doc:name="operationId" actual="#[payload.endpoints[0].operationId]" expected="#['updatePayment']"/>
+        </munit:validation>
+    </munit:test>
+
+    <munit:test name="get-api-endpoints-request-and-response-bodies-test"
+                description="Named schema, required flags, enum and description on request; every response kept with its body">
+        <munit:behavior>
+            <munit-tools:mock-when doc:name="Mock GET AMF model" processor="http:request">
+                <munit-tools:with-attributes>
+                    <munit-tools:with-attribute attributeName="doc:name" whereValue="GET AMF model"/>
+                </munit-tools:with-attributes>
+                <munit-tools:then-return>
+                    <munit-tools:payload value="#[MunitTools::getResourceAsString('sample-amf.json')]" mediaType="application/json"/>
+                </munit-tools:then-return>
+            </munit-tools:mock-when>
+        </munit:behavior>
+        <munit:execution>
+            <flow-ref doc:name="given-exchange-asset" name="given-exchange-asset"/>
+            <flow-ref doc:name="get-api-endpoints" name="get-api-endpoints"/>
+        </munit:execution>
+        <munit:validation>
+            <set-variable doc:name="PATCH /payment" variableName="op"
+                          value="#[(payload.endpoints filter ($.method == 'PATCH' and $.path == '/payment'))[0]]"/>
+            <munit-tools:assert-equals doc:name="no parameters" actual="#[vars.op.parameters]" expected="#[[]]"/>
+            <munit-tools:assert-equals doc:name="request mediaType" actual="#[vars.op.requestBody[0].mediaType]" expected="#['application/json']"/>
+            <munit-tools:assert-equals doc:name="request schema" actual="#[vars.op.requestBody[0].schema]" expected="#['Payment']"/>
+            <munit-tools:assert-equals doc:name="request fields" actual="#[vars.op.requestBody[0].fields.field]"
+                                       expected="#[['status', 'Id', 'transactionReference', 'pspReference', 'name']]"/>
+            <munit-tools:assert-equals doc:name="required flags" actual="#[vars.op.requestBody[0].fields.required]"
+                                       expected="#[[true, false, true, true, false]]"/>
+            <munit-tools:assert-equals doc:name="status field" actual="#[vars.op.requestBody[0].fields[0]]"
+                                       expected="#[{ field: 'status', 'type': 'string', required: true, description: 'Payment outcome', 'enum': ['SUCCESS', 'FAILED'] }]"/>
+            <munit-tools:assert-equals doc:name="response statuses" actual="#[vars.op.responses.status]" expected="#[['200', '400']]"/>
+            <munit-tools:assert-equals doc:name="200 description" actual="#[vars.op.responses[0].description]" expected="#['Payment updated']"/>
+            <munit-tools:assert-equals doc:name="200 inline schema" actual="#[vars.op.responses[0].body[0].schema]" expected="#['object']"/>
+            <munit-tools:assert-equals doc:name="200 fields" actual="#[vars.op.responses[0].body[0].fields.field]" expected="#[['id']]"/>
+            <munit-tools:assert-equals doc:name="400 schema" actual="#[vars.op.responses[1].body[0].schema]" expected="#['Error']"/>
+        </munit:validation>
+    </munit:test>
+
+    <munit:test name="get-api-endpoints-arrays-unions-and-formats-test"
+                description="Array items become items[].x, unions become 'a | b', datatype and format are kept">
+        <munit:behavior>
+            <munit-tools:mock-when doc:name="Mock GET AMF model" processor="http:request">
+                <munit-tools:with-attributes>
+                    <munit-tools:with-attribute attributeName="doc:name" whereValue="GET AMF model"/>
+                </munit-tools:with-attributes>
+                <munit-tools:then-return>
+                    <munit-tools:payload value="#[MunitTools::getResourceAsString('sample-amf.json')]" mediaType="application/json"/>
+                </munit-tools:then-return>
+            </munit-tools:mock-when>
+        </munit:behavior>
+        <munit:execution>
+            <flow-ref doc:name="given-exchange-asset" name="given-exchange-asset"/>
+            <flow-ref doc:name="get-api-endpoints" name="get-api-endpoints"/>
+        </munit:execution>
+        <munit:validation>
+            <set-variable doc:name="POST /shippingOrder" variableName="op"
+                          value="#[(payload.endpoints filter ($.method == 'POST' and $.path == '/shippingOrder'))[0]]"/>
+            <munit-tools:assert-equals doc:name="request fields and types"
+                                       actual="#[vars.op.requestBody[0].fields map ($.field ++ ':' ++ $.'type')]"
+                                       expected="#[['TTOrderId:string', 'trackingNumber:string | null', 'deliveredDateTime:dateTime', 'items:array&lt;object&gt;', 'items[].lineId:string', 'items[].quantity:integer']]"/>
+            <munit-tools:assert-equals doc:name="date format"
+                                       actual="#[(vars.op.requestBody[0].fields filter ($.field == 'deliveredDateTime'))[0].format]"
+                                       expected="#['rfc3339']"/>
+            <munit-tools:assert-equals doc:name="items[].lineId required"
+                                       actual="#[(vars.op.requestBody[0].fields filter ($.field == 'items[].lineId'))[0].required]"
+                                       expected="#[true]"/>
+            <munit-tools:assert-equals doc:name="201 without body" actual="#[vars.op.responses]"
+                                       expected="#[[{ status: '201', description: 'Shipping order created', body: [] }]]"/>
+        </munit:validation>
+    </munit:test>
+
+    <munit:test name="get-api-endpoints-parameters-test"
+                description="Endpoint-level path params plus request query params and headers; top-level array responses">
+        <munit:behavior>
+            <munit-tools:mock-when doc:name="Mock GET AMF model" processor="http:request">
+                <munit-tools:with-attributes>
+                    <munit-tools:with-attribute attributeName="doc:name" whereValue="GET AMF model"/>
+                </munit-tools:with-attributes>
+                <munit-tools:then-return>
+                    <munit-tools:payload value="#[MunitTools::getResourceAsString('sample-amf.json')]" mediaType="application/json"/>
+                </munit-tools:then-return>
+            </munit-tools:mock-when>
+        </munit:behavior>
+        <munit:execution>
+            <flow-ref doc:name="given-exchange-asset" name="given-exchange-asset"/>
+            <flow-ref doc:name="get-api-endpoints" name="get-api-endpoints"/>
+        </munit:execution>
+        <munit:validation>
+            <set-variable doc:name="GET /productOrder/openOrderIds" variableName="getOp"
+                          value="#[(payload.endpoints filter ($.path == '/productOrder/openOrderIds'))[0]]"/>
+            <munit-tools:assert-equals doc:name="query + header params" actual="#[vars.getOp.parameters]"
+                                       expected="#[[
+                                           { name: 'limit', 'in': 'query', 'type': 'integer', required: false, description: 'Maximum number of orders to return' },
+                                           { name: 'x-correlation-id', 'in': 'header', 'type': 'string', required: true }
+                                       ]]"/>
+            <munit-tools:assert-equals doc:name="no request body" actual="#[vars.getOp.requestBody]" expected="#[[]]"/>
+            <munit-tools:assert-equals doc:name="array response schema" actual="#[vars.getOp.responses[0].body[0].schema]" expected="#['array&lt;OpenOrder&gt;']"/>
+            <munit-tools:assert-equals doc:name="array response fields" actual="#[vars.getOp.responses[0].body[0].fields.field]"
+                                       expected="#[['[].subOrderId', '[].pxcOrderId']]"/>
+
+            <set-variable doc:name="PATCH /productOrder/{id}/state" variableName="patchOp"
+                          value="#[(payload.endpoints filter ($.path == '/productOrder/{id}/state'))[0]]"/>
+            <munit-tools:assert-equals doc:name="path param" actual="#[vars.patchOp.parameters]"
+                                       expected="#[[{ name: 'id', 'in': 'path', 'type': 'string', required: true, description: 'Product order id' }]]"/>
+        </munit:validation>
+    </munit:test>
+
+    <munit:test name="get-api-endpoints-nested-objects-test"
+                description="Nested object properties get dotted paths; nested enums and formats are kept">
+        <munit:behavior>
+            <munit-tools:mock-when doc:name="Mock GET AMF model" processor="http:request">
+                <munit-tools:with-attributes>
+                    <munit-tools:with-attribute attributeName="doc:name" whereValue="GET AMF model"/>
+                </munit-tools:with-attributes>
+                <munit-tools:then-return>
+                    <munit-tools:payload value="#[MunitTools::getResourceAsString('sample-amf.json')]" mediaType="application/json"/>
+                </munit-tools:then-return>
+            </munit-tools:mock-when>
+        </munit:behavior>
+        <munit:execution>
+            <flow-ref doc:name="given-exchange-asset" name="given-exchange-asset"/>
+            <flow-ref doc:name="get-api-endpoints" name="get-api-endpoints"/>
+        </munit:execution>
+        <munit:validation>
+            <set-variable doc:name="request fields" variableName="fields"
+                          value="#[(payload.endpoints filter ($.path == '/productOrder/{id}/state'))[0].requestBody[0].fields]"/>
+            <munit-tools:assert-equals doc:name="dotted paths" actual="#[vars.fields.field]"
+                                       expected="#[['productOrder', 'productOrder.@type', 'productOrder.state', 'productOrder.cancellationDate']]"/>
+            <munit-tools:assert-equals doc:name="object type" actual="#[vars.fields[0].'type']" expected="#['object']"/>
+            <munit-tools:assert-equals doc:name="nested required" actual="#[vars.fields.required]" expected="#[[false, true, false, false]]"/>
+            <munit-tools:assert-equals doc:name="nested enum" actual="#[vars.fields[2].'enum']" expected="#[['acknowledged', 'inProgress', 'completed']]"/>
+            <munit-tools:assert-equals doc:name="nested format" actual="#[vars.fields[3].format]" expected="#['date-time']"/>
+        </munit:validation>
+    </munit:test>
+
+    <munit:test name="get-api-endpoints-gzipped-model-test"
+                description="Exchange serves the AMF model gzipped: it is decompressed before parsing">
+        <munit:behavior>
+            <munit-tools:mock-when doc:name="Mock GET AMF model (gzip)" processor="http:request">
+                <munit-tools:with-attributes>
+                    <munit-tools:with-attribute attributeName="doc:name" whereValue="GET AMF model"/>
+                </munit-tools:with-attributes>
+                <munit-tools:then-return>
+                    <munit-tools:payload value="#[MunitTools::getResourceAsByteArray('sample-amf.json.gz')]" mediaType="application/octet-stream"/>
+                </munit-tools:then-return>
+            </munit-tools:mock-when>
+        </munit:behavior>
+        <munit:execution>
+            <flow-ref doc:name="given-exchange-asset" name="given-exchange-asset"/>
+            <flow-ref doc:name="get-api-endpoints" name="get-api-endpoints"/>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:assert-equals doc:name="no error" actual="#[keysOf(payload) map ($ as String) contains 'error']" expected="#[false]"/>
+            <munit-tools:assert-equals doc:name="specVersion" actual="#[payload.specVersion]" expected="#['v1']"/>
+            <munit-tools:assert-equals doc:name="operationCount" actual="#[payload.operationCount]" expected="#[4]"/>
+        </munit:validation>
+    </munit:test>
+
+    <munit:test name="get-api-endpoints-request-failure-test"
+                description="A failing AMF download is caught: the asset is returned with empty endpoints and an error entry">
+        <munit:behavior>
+            <munit-tools:mock-when doc:name="Mock GET AMF model (404)" processor="http:request">
+                <munit-tools:with-attributes>
+                    <munit-tools:with-attribute attributeName="doc:name" whereValue="GET AMF model"/>
+                </munit-tools:with-attributes>
+                <munit-tools:then-return>
+                    <munit-tools:error typeId="HTTP:NOT_FOUND"/>
+                </munit-tools:then-return>
+            </munit-tools:mock-when>
+        </munit:behavior>
+        <munit:execution>
+            <flow-ref doc:name="given-exchange-asset" name="given-exchange-asset"/>
+            <flow-ref doc:name="get-api-endpoints" name="get-api-endpoints"/>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:assert-equals doc:name="Output keys" actual="#[keysOf(payload) map ($ as String)]"
+                                       expected="#[['name', 'groupId', 'assetId', 'version', 'organizationId', 'endpoints', 'error']]"/>
+            <munit-tools:assert-equals doc:name="assetId kept" actual="#[payload.assetId]" expected="#['salesforce-management-sapi']"/>
+            <munit-tools:assert-equals doc:name="no endpoints" actual="#[payload.endpoints]" expected="#[[]]"/>
+        </munit:validation>
+    </munit:test>
+
+</mule>

@@ -1,0 +1,18 @@
+http:
+  port: "8089"
+
+anypoint:
+  host: "anypoint.mulesoft.com"          # eu1.anypoint.mulesoft.com for EU control plane
+  organizationId: "fb899011-573f-4c88-98ee-b0cfc9ccbce3"
+  groupId: "fb899011-573f-4c88-98ee-b0cfc9ccbce3"
+  clientId: "911dd4f784ca459791f23bb94105dd62"
+
+exchange:
+  maxConcurrency: "4"
+  search:
+    pageSize: "100"
+    maxPages: "20"
+  # Path of the request you saw in the browser Network tab that returns the "@graph" JSON,
+  # with the asset coordinates replaced by placeholders:
+  # {organizationId} {groupId} {assetId} {version}
+  amfPathTemplate: "/exchange/api/v2/assets/{groupId}/{assetId}/{version}/api/model"
